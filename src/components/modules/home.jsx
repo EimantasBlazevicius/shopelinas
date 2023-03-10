@@ -48,7 +48,7 @@ const Home = () => {
               href="/combine"
             >
               <button className="btn btn-primary" type="button">
-                API endpoints
+                Combine Lists
               </button>
             </a>
           </div>

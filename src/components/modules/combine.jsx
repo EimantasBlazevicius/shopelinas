@@ -5,7 +5,7 @@ import { useUser } from "../../context/user-context";
 import { useNavigate } from "react-router-dom";
 import { PencilFill, TrashFill } from "react-bootstrap-icons";
 
-const Private = () => {
+const Combine = () => {
   const [name, setName] = React.useState();
   const [isPublic, setIsPublic] = React.useState(false);
 
@@ -120,4 +120,4 @@ const Private = () => {
   );
 };
 
-export default Private;
+export default Combine;

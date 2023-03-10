@@ -12,14 +12,29 @@ const UserContext = React.createContext();
 function UserProvider({children}) {
     const [user, setUser] = React.useState();
     const [loggedIn, setLoggedIn] = React.useState();
+    const [userData, setUserData] = React.useState([]);
+
+    const getUserData = async (uid) => {
+      let listsList = []
+      const q = query(collection(db, "data"), where("uid", "==", uid));
+  
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        listsList = [...listsList, doc]
+        
+      });
+      setUserData(listsList);
+    };
 
     React.useEffect(() => {
         onAuthStateChanged(auth, (user) => {
           if (user) {
             setUser(user);
             setLoggedIn(true);
+            getUserData(user.uid);
           } else {
             setLoggedIn(false);
+            setUser()
           }
         });
       }, [user]);
@@ -28,7 +43,6 @@ function UserProvider({children}) {
     const handleLogin = () => {
         signInWithPopup(auth, provider)
         .then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
             setUser(result.user);
 
             const q = query(collection(db, "users"), where("uid", "==", result.user.uid));
@@ -56,7 +70,7 @@ function UserProvider({children}) {
            });
     }
 
-    return <UserContext.Provider value={{user,loggedIn, handleLogin, handleLogOut}}>{children}</UserContext.Provider>
+    return <UserContext.Provider value={{user,loggedIn, handleLogin, handleLogOut, userData, getUserData}}>{children}</UserContext.Provider>
 }
 
 function useUser() {
